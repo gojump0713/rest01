@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Favicon Generator</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    * { margin: 0; padding: 0; }
+    body { width: 256px; height: 256px; overflow: hidden; background: transparent; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <canvas id="fav" width="256" height="256"></canvas>
+  <script>
+    const ctx = document.getElementById('fav').getContext('2d');
+    const S = 256;
+
+    function draw() {
+      // 라운드 사각형 배경 (다크블루 그라데이션)
+      const bg = ctx.createLinearGradient(0, 0, S, S);
+      bg.addColorStop(0, '#0f172a');
+      bg.addColorStop(0.55, '#1e3a8a');
+      bg.addColorStop(1, '#1d4ed8');
+      ctx.beginPath();
+      ctx.roundRect(0, 0, S, S, 56);
+      ctx.fillStyle = bg;
+      ctx.fill();
+
+      // 우상단 은은한 빛
+      const glow = ctx.createRadialGradient(S * 0.78, S * 0.22, 0, S * 0.78, S * 0.22, 150);
+      glow.addColorStop(0, 'rgba(96, 165, 250, 0.35)');
+      glow.addColorStop(1, 'rgba(96, 165, 250, 0)');
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(0, 0, S, S, 56);
+      ctx.clip();
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, S, S);
+      ctx.restore();
+
+      // 텍스트 "CS."
+      const FONT = '"Pretendard", "Malgun Gothic", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = `800 118px ${FONT}`;
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText('CS', S / 2 - 14, S / 2 + 6);
+      const w = ctx.measureText('CS').width;
+      ctx.fillStyle = '#60a5fa';
+      ctx.fillText('.', S / 2 - 14 + w / 2 + 18, S / 2 + 2);
+    }
+
+    Promise.race([
+      document.fonts.load('800 118px "Pretendard"').then(() => document.fonts.ready),
+      new Promise((r) => setTimeout(r, 3000)),
+    ]).then(draw);
+  </script>
+</body>
+</html>

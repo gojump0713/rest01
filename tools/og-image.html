@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>OG Image Generator</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    * { margin: 0; padding: 0; }
+    body { width: 1200px; height: 630px; overflow: hidden; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <canvas id="og" width="1200" height="630"></canvas>
+  <script>
+    const ctx = document.getElementById('og').getContext('2d');
+    const W = 1200, H = 630;
+
+    // 시드 고정 의사난수 (재생성해도 같은 그림)
+    let seed = 20260606;
+    const rand = () => {
+      seed = (seed * 1103515245 + 12345) % 2147483648;
+      return seed / 2147483648;
+    };
+
+    function draw() {
+      // ===== 다크블루 그라데이션 배경 =====
+      const bg = ctx.createLinearGradient(0, 0, W, H);
+      bg.addColorStop(0, '#0f172a');
+      bg.addColorStop(0.6, '#1e3a8a');
+      bg.addColorStop(1, '#1d4ed8');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, W, H);
+
+      // 은은한 빛 효과
+      const glow = ctx.createRadialGradient(W * 0.82, H * 0.25, 0, W * 0.82, H * 0.25, 480);
+      glow.addColorStop(0, 'rgba(96, 165, 250, 0.28)');
+      glow.addColorStop(1, 'rgba(96, 165, 250, 0)');
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, W, H);
+
+      // ===== 파티클 네트워크 (사이트 히어로와 동일한 무드) =====
+      const pts = Array.from({ length: 70 }, () => ({
+        x: rand() * W,
+        y: rand() * H,
+        r: rand() * 2.2 + 0.8,
+      }));
+      for (let i = 0; i < pts.length; i++) {
+        for (let j = i + 1; j < pts.length; j++) {
+          const d = Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y);
+          if (d < 150) {
+            ctx.beginPath();
+            ctx.moveTo(pts[i].x, pts[i].y);
+            ctx.lineTo(pts[j].x, pts[j].y);
+            ctx.strokeStyle = `rgba(147, 197, 253, ${0.16 * (1 - d / 150)})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
+      pts.forEach((p) => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(147, 197, 253, 0.5)';
+        ctx.fill();
+      });
+
+      // ===== 텍스트 =====
+      const FONT = '"Pretendard", "Malgun Gothic", sans-serif';
+      ctx.textBaseline = 'alphabetic';
+
+      // 상단 라벨
+      ctx.fillStyle = '#93c5fd';
+      ctx.font = `600 26px ${FONT}`;
+      ctx.fillText('RESUME · PORTFOLIO', 90, 165);
+
+      // 라벨 위 포인트 라인
+      ctx.fillStyle = '#3b82f6';
+      ctx.fillRect(90, 120, 64, 6);
+
+      // 메인 카피 (2줄)
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `800 64px ${FONT}`;
+      ctx.fillText('ICT 분야 R&D 기획과', 88, 268);
+      ctx.fillText('사업전략 전문가', 88, 352);
+
+      // 이름
+      ctx.fillStyle = '#bfdbfe';
+      ctx.font = `700 44px ${FONT}`;
+      ctx.fillText('이춘성', 90, 448);
+      const nameW = ctx.measureText('이춘성').width;
+      ctx.fillStyle = 'rgba(191, 219, 254, 0.65)';
+      ctx.font = `400 28px ${FONT}`;
+      ctx.fillText('Chun Seoung Lee', 90 + nameW + 22, 448);
+
+      // 키워드 배지
+      const badges = ['클라우드', 'DaaS / VDI', '블록체인', '메타버스', 'R&D 기획'];
+      ctx.font = `500 22px ${FONT}`;
+      let bx = 90;
+      const by = 510;
+      badges.forEach((label) => {
+        const tw = ctx.measureText(label).width;
+        const bw = tw + 44;
+        ctx.beginPath();
+        ctx.roundRect(bx, by, bw, 46, 23);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.10)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.fillStyle = '#e0eaff';
+        ctx.fillText(label, bx + 22, by + 31);
+        bx += bw + 14;
+      });
+
+      // 하단 URL
+      ctx.fillStyle = 'rgba(191, 219, 254, 0.55)';
+      ctx.font = `400 20px ${FONT}`;
+      ctx.fillText('gojump0713.github.io/rest01', 905, 596);
+    }
+
+    // 웹폰트 로드 완료 후 그리기 (실패해도 폴백 폰트로 그림)
+    Promise.race([
+      document.fonts.load('800 64px "Pretendard"').then(() => document.fonts.ready),
+      new Promise((r) => setTimeout(r, 3000)),
+    ]).then(draw);
+  </script>
+</body>
+</html>
