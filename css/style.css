@@ -95,15 +95,32 @@ a {
 
 /* ===== Hero ===== */
 .hero {
+  position: relative;
   background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #1d4ed8 100%);
   color: #fff;
   padding: 5rem 0;
+  overflow: hidden;
+}
+
+.hero__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
 .hero__inner {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   gap: 3.5rem;
+}
+
+.hero__photo {
+  will-change: transform;
+  transition: transform 0.15s ease-out;
 }
 
 .hero__photo img {
@@ -114,6 +131,56 @@ a {
   object-position: top;
   border: 5px solid rgba(255, 255, 255, 0.25);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* 히어로 등장 애니메이션 */
+.hero__photo,
+.hero__text > * {
+  animation: hero-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+.hero__text > *:nth-child(1) { animation-delay: 0.15s; }
+.hero__text > *:nth-child(2) { animation-delay: 0.3s; }
+.hero__text > *:nth-child(3) { animation-delay: 0.45s; }
+.hero__text > *:nth-child(4) { animation-delay: 0.6s; }
+.hero__text > *:nth-child(5) { animation-delay: 0.75s; }
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 타이핑 커서 */
+.hero__cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.15em;
+  margin-left: 3px;
+  vertical-align: -0.18em;
+  background: #93c5fd;
+  animation: cursor-blink 0.9s steps(1) infinite;
+}
+
+@keyframes cursor-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__photo,
+  .hero__text > * {
+    animation: none;
+  }
+
+  .hero__cursor {
+    animation: none;
+  }
 }
 
 .hero__greeting {

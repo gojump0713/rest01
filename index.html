@@ -7,7 +7,7 @@
   <meta name="description" content="이춘성 — ICT 전략·클라우드·DaaS 전문가. 주식회사 틸론 전략개발본부 부사장.">
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=3">
 </head>
 <body>
 
@@ -28,6 +28,7 @@
 
   <!-- ===== 히어로 ===== -->
   <header class="hero" id="top">
+    <canvas class="hero__canvas" aria-hidden="true"></canvas>
     <div class="container hero__inner">
       <div class="hero__photo">
         <img src="images/profile.png" alt="이춘성 프로필 사진">
@@ -35,7 +36,7 @@
       <div class="hero__text">
         <p class="hero__greeting">안녕하세요,</p>
         <h1 class="hero__name">이춘성<span class="hero__name-en">Chun Seoung Lee</span></h1>
-        <p class="hero__tagline">클라우드 · DaaS · 신사업 전략 전문가</p>
+        <p class="hero__tagline"><span class="hero__typing">클라우드 · DaaS · 신사업 전략 전문가</span><span class="hero__cursor" aria-hidden="true"></span></p>
         <p class="hero__desc">
           ICT 분야 R&amp;D 기획과 사업전략, 25년의 경험으로<br>
           기술을 비즈니스로 연결합니다.
@@ -297,6 +298,6 @@
     </div>
   </footer>
 
-  <script src="js/main.js"></script>
+  <script src="js/main.js?v=3"></script>
 </body>
 </html>
